@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elisa Koti — Konseptimockup</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'SF Pro Display', 'Segoe UI', system-ui, -apple-system, sans-serif; }
+  #root { min-height: 100vh; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
+<script type="text/babel">
+const { useState } = React;
+
+const ELISA_BLUE = "#0019AF";
+const ELISA_LIGHT = "#E8EDFF";
+const ELISA_ACCENT = "#4A6CF7";
+const BG = "#F5F7FC";
+const WHITE = "#FFFFFF";
+const DARK = "#1A1A2E";
+const GRAY = "#8892A5";
+const LIGHT_GRAY = "#E5E9F2";
+const GREEN = "#22C55E";
+const ORANGE = "#F59E0B";
+const PREMIUM_GOLD = "#7C5CFC";
+const PREMIUM_BG = "#F6F4FF";
+const DNA_GREEN = "#00B140";
+
+const timeAgo = (m) => m < 60 ? `${m} min sitten` : m < 1440 ? `${Math.floor(m/60)} h sitten` : "eilen";
+
+// ========== SEINÄ ==========
+function Seina({ isPremium }) {
+  const [view, setView] = useState("seina");
+  const [items, setItems] = useState([
+    { id:1, text:"Maitoa (kevyt)", checked:false, avatar:"👩" },
+    { id:2, text:"Ruisleipää", checked:false, avatar:"👨" },
+    { id:3, text:"Banaaneja", checked:false, avatar:"👧" },
+    { id:4, text:"Kananmunia (12 kpl)", checked:false, avatar:"👩" },
+    { id:5, text:"Pesunestettä", checked:true, avatar:"👨" },
+  ]);
+  const toggle = (id) => setItems(items.map(i => i.id === id ? {...i, checked:!i.checked} : i));
+  const posts = [
+    { id:1, author:"Äiti", avatar:"👩", time:5, text:"Muistakaa uimavarusteet huomenna!", pinned:true },
+    { id:2, author:"Isä", avatar:"👨", time:32, text:"Haen lapset klo 16.", badge:"DNA", badgeColor:DNA_GREEN },
+    { id:3, author:"Veera", avatar:"👧", time:65, isCheckin:true },
+    { id:4, author:"Äiti", avatar:"👩", time:180, text:"Bellan eläinlääkäriaika to klo 10." },
+  ];
+
+  return (
+    <div style={{ padding:"0 10px" }}>
+      <div style={{ display:"flex", alignItems:"center", gap:5, padding:"8px 0 6px" }}>
+        <div style={{ display:"flex" }}>
+          {(isPremium ? ["👩","👨","👧","👦","🐕"] : ["👩","👨","👧","👦"]).map((e,i) => (
+            <div key={i} style={{ width:20, height:20, borderRadius:"50%", background: i===1 ? "#E8FFE8" : ELISA_LIGHT, display:"flex", alignItems:"center", justifyContent:"center", fontSize:9, marginLeft:i>0?-5:0, border:`2px solid ${WHITE}`, position:"relative", zIndex:5-i }}>{e}</div>
+          ))}
+        </div>
+        <div style={{ flex:1 }}>
+          <div style={{ fontSize:9, fontWeight:600, color:DARK }}>Perhe Virtanen</div>
+          <div style={{ fontSize:7, color:GRAY }}>{isPremium ? "4 jäsentä + 2 laitetta" : "4 jäsentä"}</div>
+        </div>
+      </div>
+      <div style={{ display:"flex", background:LIGHT_GRAY, borderRadius:8, padding:2, marginBottom:8 }}>
+        {["seina","lista"].map(v => (
+          <div key={v} onClick={() => setView(v)} style={{
+            flex:1, textAlign:"center", padding:"5px 0", borderRadius:6, background:view===v?WHITE:"transparent",
+            fontSize:9, fontWeight:view===v?600:400, color:view===v?DARK:GRAY, cursor:"pointer",
+            boxShadow:view===v?"0 1px 3px rgba(0,0,0,0.08)":"none"
+          }}>{v==="seina" ? "📋 Seinä" : "🛒 Kauppalista"}</div>
+        ))}
+      </div>
+
+      {view === "seina" ? (
+        <>
+          {isPremium && (
+            <div style={{ background:`linear-gradient(135deg, ${DARK} 0%, #2A2A4E 100%)`, borderRadius:10, padding:"8px 10px", marginBottom:6, color:WHITE }}>
+              <div style={{ display:"flex", alignItems:"center", gap:3, marginBottom:3 }}>
+                <span style={{ fontSize:8 }}>🤖</span>
+                <span style={{ fontSize:8, fontWeight:600 }}>Helmi · AI-yhteenveto</span>
+                <span style={{ fontSize:6, background:PREMIUM_GOLD, color:WHITE, padding:"1px 4px", borderRadius:4, marginLeft:"auto" }}>✦</span>
+              </div>
+              <div style={{ fontSize:8, lineHeight:1.4, opacity:0.9 }}>Kaikki saapuivat ajoissa. Bella ulkoili 3x. Kotiakku säästi 2,10 €.</div>
+            </div>
+          )}
+          {posts.map(p => (
+            <div key={p.id} style={{ background:p.pinned?"#FFF9E5":WHITE, borderRadius:8, padding:"8px 10px", marginBottom:5, border:p.pinned?"1px solid #F5E6A3":`1px solid ${LIGHT_GRAY}` }}>
+              <div style={{ display:"flex", alignItems:"center", gap:5, marginBottom:3 }}>
+                <div style={{ width:20, height:20, borderRadius:"50%", background:p.badge?"#E8FFE8":ELISA_LIGHT, display:"flex", alignItems:"center", justifyContent:"center", fontSize:9 }}>{p.avatar}</div>
+                <span style={{ fontSize:9, fontWeight:600, color:DARK, flex:1 }}>{p.author}</span>
+                {p.badge && <span style={{ fontSize:6, fontWeight:600, color:WHITE, background:p.badgeColor, padding:"1px 4px", borderRadius:4 }}>{p.badge}</span>}
+                {p.pinned && <span style={{ fontSize:7, color:ORANGE }}>📌</span>}
+                <span style={{ fontSize:7, color:GRAY }}>{timeAgo(p.time)}</span>
+              </div>
+              <div style={{ fontSize:9, color:DARK, lineHeight:1.4, paddingLeft:25 }}>
+                {p.isCheckin ? (
+                  <div style={{ background:"#ECFDF5", borderRadius:5, padding:"3px 7px", color:"#166534", fontSize:8, fontWeight:500, display:"inline-flex", alignItems:"center", gap:2 }}>📍 Check-in: Koulu</div>
+                ) : p.text}
+              </div>
+            </div>
+          ))}
+        </>
+      ) : (
+        <>
+          <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:6 }}>
+            <div style={{ fontSize:9, color:GRAY }}>{items.filter(i=>!i.checked).length} tuotetta jäljellä</div>
+            <div style={{ background:ELISA_BLUE, color:WHITE, fontSize:7, fontWeight:600, padding:"3px 8px", borderRadius:10 }}>+ Lisää</div>
+          </div>
+          {isPremium && (
+            <div style={{ marginBottom:6 }}>
+              <div style={{ background:`linear-gradient(135deg, ${PREMIUM_BG} 0%, #EDE9FF 100%)`, borderRadius:8, padding:"7px 9px", marginBottom:4, border:"1px solid #E0D4FF" }}>
+                <div style={{ display:"flex", alignItems:"center", gap:4, marginBottom:4 }}>
+                  <span style={{ fontSize:10 }}>🤖</span>
+                  <span style={{ fontSize:8, fontWeight:600, color:PREMIUM_GOLD }}>Helmi ehdottaa</span>
+                </div>
+                <div style={{ fontSize:8, color:DARK, fontWeight:500, marginBottom:5 }}>Lisätäänkö spagettiainekset?</div>
+                <div style={{ display:"flex", gap:3, flexWrap:"wrap", marginBottom:5 }}>
+                  {["Tomaattimurska","Jauheliha","Sipuli","Spagetti"].map((a,i) => (
+                    <span key={i} style={{ fontSize:7, color:GRAY, background:WHITE, padding:"2px 6px", borderRadius:4, border:`1px solid ${LIGHT_GRAY}` }}>{a}</span>
+                  ))}
+                </div>
+                <div style={{ display:"flex", gap:4 }}>
+                  <div style={{ background:PREMIUM_GOLD, color:WHITE, fontSize:7, fontWeight:600, padding:"4px 10px", borderRadius:6, cursor:"pointer" }}>Lisää kaikki</div>
+                  <div style={{ background:WHITE, color:GRAY, fontSize:7, fontWeight:500, padding:"4px 10px", borderRadius:6, border:`1px solid ${LIGHT_GRAY}`, cursor:"pointer" }}>Ohita</div>
+                </div>
+              </div>
+              <div style={{ background:WHITE, borderRadius:7, padding:"6px 9px", border:`1px solid ${LIGHT_GRAY}`, display:"flex", alignItems:"center", gap:5 }}>
+                <span style={{ fontSize:9 }}>🤖</span>
+                <div style={{ flex:1, fontSize:8, color:GRAY }}><span style={{ fontWeight:600, color:PREMIUM_GOLD }}>Helmi:</span> Maito yleensä listalla ma — lisätäänkö?</div>
+                <div style={{ fontSize:7, color:PREMIUM_GOLD, fontWeight:600, cursor:"pointer" }}>Lisää</div>
+              </div>
+            </div>
+          )}
+          {items.filter(i=>!i.checked).map(it => (
+            <div key={it.id} onClick={() => toggle(it.id)} style={{ display:"flex", alignItems:"center", gap:7, background:WHITE, borderRadius:7, padding:"7px 9px", marginBottom:3, border:`1px solid ${LIGHT_GRAY}`, cursor:"pointer" }}>
+              <div style={{ width:15, height:15, borderRadius:4, border:`2px solid ${LIGHT_GRAY}`, flexShrink:0 }} />
+              <div style={{ flex:1, fontSize:9, color:DARK, fontWeight:500 }}>{it.text}</div>
+              <div style={{ width:15, height:15, borderRadius:"50%", background:ELISA_LIGHT, display:"flex", alignItems:"center", justifyContent:"center", fontSize:7 }}>{it.avatar}</div>
+            </div>
+          ))}
+          {items.filter(i=>i.checked).length > 0 && (
+            <>
+              <div style={{ fontSize:7, color:GRAY, fontWeight:600, margin:"8px 0 4px", textTransform:"uppercase", letterSpacing:0.5 }}>Ostettu ✓</div>
+              {items.filter(i=>i.checked).map(it => (
+                <div key={it.id} onClick={() => toggle(it.id)} style={{ display:"flex", alignItems:"center", gap:7, background:"#FAFAFA", borderRadius:7, padding:"7px 9px", marginBottom:3, border:"1px solid #F0F0F0", cursor:"pointer", opacity:0.5 }}>
+                  <div style={{ width:15, height:15, borderRadius:4, background:GREEN, display:"flex", alignItems:"center", justifyContent:"center", color:WHITE, fontSize:9, fontWeight:700, flexShrink:0 }}>✓</div>
+                  <div style={{ flex:1, fontSize:9, color:GRAY, textDecoration:"line-through" }}>{it.text}</div>
+                </div>
+              ))}
+            </>
+          )}
+        </>
+      )}
+    </div>
+  );
+}
+
+// ========== SIJAINTI ==========
+function Sijainti({ isPremium }) {
+  const members = [
+    { name:"Äiti", avatar:"👩", loc:"Toimisto, Pasila", top:"38%", left:"55%", home:false },
+    { name:"Isä", avatar:"👨", loc: isPremium ? "Sijainti ei käytössä" : "Sijainti ei käytössä", top:"0", left:"0", hidden:!isPremium, isDNA:true },
+    { name:"Veera", avatar:"👧", loc:"Meilahden koulu", top:"30%", left:"28%", home:false },
+    { name:"Eemeli", avatar:"👦", loc:"Päiväkoti Aurinko", top:"65%", left:"62%", home:false },
+  ];
+  const devices = isPremium ? [
+    { name:"Bella 🐕", avatar:"🐕", loc:"Koirapuisto", top:"48%", left:"72%", isDevice:true },
+  ] : [];
+  const visible = members.filter(m => !m.hidden && !m.isDNA);
+  const allOnMap = [...visible, ...devices];
+  const allList = [...members, ...devices];
+  const [sel, setSel] = useState(null);
+
+  return (
+    <div>
+      <div style={{ height:170, background:"linear-gradient(135deg, #E8EDFF 0%, #D0DBFF 50%, #C5D4F7 100%)", position:"relative", overflow:"hidden", borderRadius:"0 0 12px 12px" }}>
+        {[...Array(6)].map((_,i) => <div key={i} style={{ position:"absolute", top:`${(i+1)*16}%`, left:0, right:0, height:1, background:"rgba(0,25,175,0.06)" }} />)}
+        <div style={{ position:"absolute", top:"30%", left:0, right:0, height:2, background:"rgba(0,25,175,0.08)", transform:"rotate(-8deg)" }} />
+        <div style={{ position:"absolute", top:0, bottom:0, left:"40%", width:2, background:"rgba(0,25,175,0.08)", transform:"rotate(5deg)" }} />
+        <div style={{ position:"absolute", top:"52%", left:"36%", width:22, height:22, borderRadius:6, background:WHITE, display:"flex", alignItems:"center", justifyContent:"center", fontSize:11, boxShadow:"0 1px 4px rgba(0,0,0,0.15)", border:`2px solid ${ELISA_BLUE}`, zIndex:5 }}>🏠</div>
+        {allOnMap.map((m,i) => (
+          <div key={i} onClick={() => setSel(sel===i?null:i)} style={{ position:"absolute", top:m.top, left:m.left, transform:"translate(-50%,-50%)", zIndex:sel===i?10:6, cursor:"pointer" }}>
+            <div style={{
+              width:sel===i?30:24, height:sel===i?30:24, borderRadius:"50%",
+              background:m.isDevice?ORANGE:ELISA_BLUE,
+              display:"flex", alignItems:"center", justifyContent:"center", fontSize:sel===i?14:11,
+              border:`2px solid ${WHITE}`, boxShadow:sel===i?"0 0 0 3px rgba(0,25,175,0.2), 0 2px 8px rgba(0,0,0,0.2)":"0 1px 4px rgba(0,0,0,0.2)",
+              transition:"all 0.15s ease"
+            }}>{m.avatar}</div>
+            {sel===i && (
+              <div style={{ position:"absolute", top:"115%", left:"50%", transform:"translateX(-50%)", background:WHITE, borderRadius:6, padding:"4px 8px", boxShadow:"0 2px 8px rgba(0,0,0,0.15)", whiteSpace:"nowrap", zIndex:20 }}>
+                <div style={{ fontSize:9, fontWeight:600, color:DARK }}>{m.name}</div>
+                <div style={{ fontSize:8, color:GRAY }}>{m.loc}</div>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+      <div style={{ padding:"6px 10px" }}>
+        {allList.map((m,i) => (
+          <div key={i} style={{
+            display:"flex", alignItems:"center", gap:6, padding:"5px 7px", borderRadius:7, marginBottom:2,
+            background: m.isDNA ? "#FEF2F2" : WHITE,
+            border: m.isDNA ? "1px solid #FECACA" : `1px solid ${LIGHT_GRAY}`, cursor:"pointer"
+          }}>
+            <div style={{ width:20, height:20, borderRadius:"50%", background:m.isDNA?"#FEE2E2":m.isDevice?"#FFF7ED":ELISA_LIGHT, display:"flex", alignItems:"center", justifyContent:"center", fontSize:10, position:"relative" }}>
+              {m.avatar}
+            </div>
+            <div style={{ flex:1 }}>
+              <div style={{ display:"flex", alignItems:"center", gap:3 }}>
+                <span style={{ fontSize:9, fontWeight:500, color:m.isDNA?"#991B1B":DARK }}>{m.name}</span>
+                {m.isDNA && <span style={{ fontSize:6, fontWeight:600, color:WHITE, background:DNA_GREEN, padding:"1px 4px", borderRadius:3 }}>DNA</span>}
+              </div>
+              <div style={{ fontSize:7, color:m.isDNA?"#B91C1C":GRAY }}>{m.isDNA ? "Sijainti ei käytössä" : m.loc}</div>
+            </div>
+            {m.isDNA ? (
+              <div style={{ fontSize:6, color:ELISA_BLUE, fontWeight:600 }}>Vaihda →</div>
+            ) : (
+              <div style={{ fontSize:6, color:WHITE, fontWeight:600, background:m.isDevice?ORANGE:ELISA_ACCENT, padding:"2px 5px", borderRadius:6 }}>
+                {m.isDevice?"Tracker":"Akt."}
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ========== PREMIUM TAB ==========
+function PremiumTab({ isPremium }) {
+  const [section, setSection] = useState("turva");
+  const sections = [
+    { id:"turva", label:"🛡️ Turva" },
+    { id:"energia", label:"⚡ Energia" },
+    { id:"wifi", label:"📶 WiFi" },
+    { id:"raportti", label:"📊 Raportti" },
+  ];
+  return (
+    <div style={{ padding:"0 10px" }}>
+      <div style={{ display:"flex", gap:2, padding:"6px 0 8px" }}>
+        {sections.map(s => (
+          <div key={s.id} onClick={() => setSection(s.id)} style={{
+            flex:1, textAlign:"center", padding:"5px 3px", borderRadius:8, fontSize:7, fontWeight:600, cursor:"pointer",
+            background: section===s.id ? (isPremium ? PREMIUM_GOLD : `${PREMIUM_GOLD}20`) : (isPremium ? `${PREMIUM_GOLD}15` : "#F0F0F0"),
+            color: section===s.id ? (isPremium ? WHITE : PREMIUM_GOLD) : GRAY,
+            transition:"all 0.15s ease"
+          }}>{s.label}</div>
+        ))}
+      </div>
+      {isPremium ? (
+        <>
+          {section === "turva" && <TurvaOpen />}
+          {section === "energia" && <EnergiaOpen />}
+          {section === "wifi" && <WiFiOpen />}
+          {section === "raportti" && <RaporttiOpen />}
+        </>
+      ) : (
+        <>
+          {section === "turva" && <TurvaLocked />}
+          {section === "energia" && <EnergiaLocked />}
+          {section === "wifi" && <WiFiLocked />}
+          {section === "raportti" && <RaporttiLocked />}
+        </>
+      )}
+    </div>
+  );
+}
+
+// ========== PALVELUT ==========
+function Palvelut() {
+  return (
+    <div style={{ padding:"0 10px" }}>
+      {/* DNA conversion banner - TOP POSITION */}
+      <div style={{ background:"linear-gradient(135deg, #FEF2F2 0%, #FFE4E6 100%)", borderRadius:10, padding:"9px 11px", marginTop:4, marginBottom:8, border:"1px solid #FECACA" }}>
+        <div style={{ display:"flex", alignItems:"center", gap:4, marginBottom:4 }}>
+          <span style={{ fontSize:9 }}>🤖</span>
+          <span style={{ fontSize:8, fontWeight:600, color:PREMIUM_GOLD }}>Helmi huomasi</span>
+        </div>
+        <div style={{ display:"flex", alignItems:"center", gap:6, marginBottom:5 }}>
+          <div style={{ width:24, height:24, borderRadius:"50%", background:"#FEE2E2", display:"flex", alignItems:"center", justifyContent:"center", fontSize:12 }}>👨</div>
+          <div style={{ flex:1 }}>
+            <div style={{ fontSize:9, fontWeight:600, color:"#991B1B" }}>Isän liittymä on DNA:lla</div>
+            <div style={{ fontSize:7, color:"#B91C1C", lineHeight:1.4 }}>Isän sijainti ei näy kartalla eikä AI-hälytykset kata häntä</div>
+          </div>
+        </div>
+        <div style={{ background:WHITE, borderRadius:8, padding:"7px 9px", marginBottom:4 }}>
+          <div style={{ fontSize:8, fontWeight:600, color:DARK, marginBottom:1 }}>Vaihda Elisalle — numeronsiirto ilmainen</div>
+          <div style={{ fontSize:7, color:GRAY, marginBottom:4 }}>Huoleton 5G 29,90 €/kk · Rajaton data · Koti Premium sisältyy</div>
+          <div style={{ display:"flex", gap:4 }}>
+            <div style={{ background:ELISA_BLUE, color:WHITE, fontSize:7, fontWeight:600, padding:"5px 12px", borderRadius:6, cursor:"pointer" }}>Tilaa numeronsiirto →</div>
+            <div style={{ background:WHITE, color:GRAY, fontSize:7, fontWeight:500, padding:"5px 10px", borderRadius:6, border:`1px solid ${LIGHT_GRAY}`, cursor:"pointer" }}>Myöhemmin</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Helmi 5G upgrade suggestion */}
+      <div style={{ background:`linear-gradient(135deg, ${PREMIUM_BG} 0%, #EDE9FF 100%)`, borderRadius:8, padding:"7px 9px", marginBottom:8, border:"1px solid #E0D4FF" }}>
+        <div style={{ display:"flex", alignItems:"center", gap:4, marginBottom:3 }}>
+          <span style={{ fontSize:9 }}>🤖</span>
+          <span style={{ fontSize:8, fontWeight:600, color:PREMIUM_GOLD }}>Helmi suosittelee</span>
+        </div>
+        <div style={{ fontSize:8, color:DARK, fontWeight:500, marginBottom:2 }}>Veeran puhelin tukee 5G:tä — liittymä on 4G</div>
+        <div style={{ fontSize:7, color:GRAY, marginBottom:4 }}>Päivitä Huolettomaan 5G: 10x nopeampi +4 €/kk</div>
+        <div style={{ display:"flex", gap:4 }}>
+          <div style={{ background:PREMIUM_GOLD, color:WHITE, fontSize:7, fontWeight:600, padding:"4px 10px", borderRadius:6, cursor:"pointer" }}>Päivitä</div>
+          <div style={{ background:WHITE, color:GRAY, fontSize:7, fontWeight:500, padding:"4px 10px", borderRadius:6, border:`1px solid ${LIGHT_GRAY}`, cursor:"pointer" }}>Ohita</div>
+        </div>
+      </div>
+
+      {/* Mobiililiittymät */}
+      <div style={{ fontSize:7, color:GRAY, fontWeight:600, marginBottom:4, textTransform:"uppercase", letterSpacing:0.5 }}>Mobiililiittymät</div>
+      {[
+        { name:"Äiti", avatar:"👩", plan:"Premium 5G", speed:"1000M", price:"39,90 €", ok:true },
+        { name:"Isä", avatar:"👨", plan:"DNA Rajaton 4G", price:"24,90 €", isDNA:true },
+        { name:"Veera", avatar:"👧", plan:"Saunalahti 4G", speed:"100M", price:"12,90 €", warn:"Puhelin tukee 5G" },
+        { name:"Eemeli", avatar:"👦", plan:"Saunalahti Mini", speed:"10M", price:"6,90 €", ok:true },
+      ].map((m,i) => (
+        <div key={i} style={{
+          background: m.isDNA ? "#FEF2F2" : WHITE, borderRadius:7, padding:"6px 9px", marginBottom:3,
+          border: m.isDNA ? "1px solid #FECACA" : m.warn ? "1px solid #FDE68A" : `1px solid ${LIGHT_GRAY}`
+        }}>
+          <div style={{ display:"flex", alignItems:"center", gap:5 }}>
+            <div style={{ width:20, height:20, borderRadius:"50%", background:m.isDNA?"#FEE2E2":ELISA_LIGHT, display:"flex", alignItems:"center", justifyContent:"center", fontSize:9 }}>{m.avatar}</div>
+            <div style={{ flex:1 }}>
+              <div style={{ display:"flex", alignItems:"center", gap:3 }}>
+                <span style={{ fontSize:9, fontWeight:500, color:DARK }}>{m.name}</span>
+                {m.isDNA && <span style={{ fontSize:6, fontWeight:600, color:WHITE, background:DNA_GREEN, padding:"1px 4px", borderRadius:3 }}>DNA</span>}
+              </div>
+              <div style={{ fontSize:7, color:GRAY }}>{m.plan}{m.speed ? ` · ${m.speed}` : ""}</div>
+            </div>
+            <div style={{ textAlign:"right" }}>
+              <div style={{ fontSize:8, fontWeight:600, color:m.isDNA?"#991B1B":DARK }}>{m.price}</div>
+              {m.warn && <div style={{ fontSize:6, color:ORANGE, fontWeight:600 }}>{m.warn}</div>}
+            </div>
+          </div>
+          {m.isDNA && (
+            <div style={{ marginTop:4, paddingLeft:25 }}>
+              <div style={{ fontSize:7, color:ELISA_BLUE, fontWeight:600, cursor:"pointer" }}>Tilaa numeronsiirto → Huoleton 5G 29,90 €/kk</div>
+            </div>
+          )}
+          {m.warn && (
+            <div style={{ marginTop:4, paddingLeft:25 }}>
+              <div style={{ fontSize:7, color:ELISA_ACCENT, fontWeight:600, cursor:"pointer" }}>Päivitä 5G Huolettomaan → +4 €/kk</div>
+            </div>
+          )}
+        </div>
+      ))}
+
+      {/* Laajakaista */}
+      <div style={{ fontSize:7, color:GRAY, fontWeight:600, margin:"8px 0 4px", textTransform:"uppercase", letterSpacing:0.5 }}>Laajakaista</div>
+      <div style={{ background:WHITE, borderRadius:7, padding:"6px 9px", marginBottom:3, border:`1px solid ${LIGHT_GRAY}` }}>
+        <div style={{ display:"flex", alignItems:"center", gap:6 }}>
+          <div style={{ width:22, height:22, borderRadius:6, background:ELISA_LIGHT, display:"flex", alignItems:"center", justifyContent:"center", fontSize:11 }}>🌐</div>
+          <div style={{ flex:1 }}>
+            <div style={{ fontSize:9, fontWeight:600, color:DARK }}>Elisa Netti 200M</div>
+            <div style={{ fontSize:7, color:GRAY }}>Kotikatu 5 · <span style={{ color:GREEN }}>Toimii</span></div>
+          </div>
+        </div>
+        <div style={{ background:`${ELISA_BLUE}08`, borderRadius:6, padding:"4px 8px", marginTop:4, display:"flex", alignItems:"center", gap:4, border:`1px dashed ${ELISA_ACCENT}40` }}>
+          <span style={{ fontSize:8 }}>⚡</span>
+          <div style={{ flex:1, fontSize:7, color:DARK }}>Päivitä 1 Gbps — +5 €/kk</div>
+          <div style={{ fontSize:7, color:ELISA_BLUE, fontWeight:600 }}>→</div>
+        </div>
+      </div>
+
+      {/* Koti-laitteet */}
+      <div style={{ fontSize:7, color:GRAY, fontWeight:600, margin:"8px 0 4px", textTransform:"uppercase", letterSpacing:0.5 }}>Koti-laitteet</div>
+      {[
+        { name:"Elisa Koti Watch", icon:"⌚", who:"Veera", price:"9,99 €/kk" },
+        { name:"Elisa Koti Tracker", icon:"📍", who:"Bella", price:"3,95 €/kk" },
+      ].map((d,i) => (
+        <div key={i} style={{ display:"flex", alignItems:"center", gap:5, background:WHITE, borderRadius:7, padding:"5px 9px", marginBottom:2, border:`1px solid ${LIGHT_GRAY}` }}>
+          <span style={{ fontSize:12 }}>{d.icon}</span>
+          <div style={{ flex:1 }}>
+            <div style={{ fontSize:8, fontWeight:500, color:DARK }}>{d.name}</div>
+            <div style={{ fontSize:7, color:GRAY }}>{d.who} · Aktiivinen</div>
+          </div>
+          <div style={{ fontSize:7, color:DARK, fontWeight:600 }}>{d.price}</div>
+        </div>
+      ))}
+      <div style={{ background:`${ELISA_BLUE}08`, borderRadius:7, padding:"5px 9px", border:`1px dashed ${ELISA_ACCENT}40`, display:"flex", alignItems:"center", gap:5, cursor:"pointer", marginBottom:3 }}>
+        <div style={{ width:18, height:18, borderRadius:5, background:ELISA_LIGHT, display:"flex", alignItems:"center", justifyContent:"center", fontSize:9, color:ELISA_BLUE, fontWeight:700 }}>+</div>
+        <div style={{ fontSize:7, fontWeight:600, color:ELISA_BLUE }}>Lisää Koti-laite</div>
+      </div>
+
+      {/* Elisa Viihde */}
+      <div style={{ fontSize:7, color:GRAY, fontWeight:600, margin:"8px 0 4px", textTransform:"uppercase", letterSpacing:0.5 }}>Viihde</div>
+      <div style={{ background:WHITE, borderRadius:7, padding:"6px 9px", marginBottom:3, border:`1px solid ${LIGHT_GRAY}` }}>
+        <div style={{ display:"flex", alignItems:"center", gap:5 }}>
+          <span style={{ fontSize:12 }}>📺</span>
+          <div style={{ flex:1 }}>
+            <div style={{ fontSize:8, fontWeight:600, color:DARK }}>Elisa Viihde Premium</div>
+            <div style={{ fontSize:7, color:GRAY }}>12 kanavapakettia aktiivisena</div>
+          </div>
+          <div style={{ fontSize:7, color:GREEN, fontWeight:600 }}>Akt.</div>
+        </div>
+      </div>
+      <div style={{ background:`${ELISA_BLUE}08`, borderRadius:6, padding:"5px 9px", border:`1px dashed ${ELISA_ACCENT}40`, display:"flex", alignItems:"center", gap:5, marginBottom:3 }}>
+        <span style={{ fontSize:10 }}>🏎️</span>
+        <div style={{ flex:1 }}>
+          <div style={{ fontSize:7, fontWeight:600, color:ELISA_BLUE }}>Formulakausi alkaa!</div>
+          <div style={{ fontSize:6, color:GRAY }}>C More Sport 9,99 €/kk — katso F1 livenä</div>
+        </div>
+        <div style={{ fontSize:7, color:ELISA_BLUE, fontWeight:600 }}>Tilaa →</div>
+      </div>
+
+      {/* Tarjoukset */}
+      <div style={{ fontSize:7, color:GRAY, fontWeight:600, margin:"8px 0 4px", textTransform:"uppercase", letterSpacing:0.5 }}>🔥 Tarjoukset</div>
+      <div style={{ background:"linear-gradient(135deg, #FFF7ED 0%, #FFEDD5 100%)", borderRadius:8, padding:"7px 9px", marginBottom:4, border:"1px solid #FED7AA" }}>
+        <div style={{ fontSize:8, fontWeight:600, color:"#9A3412", marginBottom:2 }}>Elisa Koti Auto — 50 % alennus</div>
+        <div style={{ fontSize:7, color:"#B45309", marginBottom:4 }}>Auton sijainti ja ajopäiväkirja. 49,50 € + 5,95 €/kk</div>
+        <div style={{ background:"#EA580C", color:WHITE, fontSize:7, fontWeight:600, padding:"4px 10px", borderRadius:6, display:"inline-block", cursor:"pointer" }}>Tilaa →</div>
+      </div>
+      <div style={{ background:WHITE, borderRadius:7, padding:"6px 9px", border:`1px solid ${LIGHT_GRAY}`, display:"flex", alignItems:"center", gap:5 }}>
+        <span style={{ fontSize:12 }}>🎁</span>
+        <div style={{ flex:1 }}>
+          <div style={{ fontSize:8, fontWeight:600, color:DARK }}>Kutsu ystävä Elisalle</div>
+          <div style={{ fontSize:7, color:GRAY }}>Molemmat saatte 1 kk Premium-edun</div>
+        </div>
+        <div style={{ fontSize:7, color:ELISA_BLUE, fontWeight:600 }}>Jaa →</div>
+      </div>
+    </div>
+  );
+}
+
+// ========== PREMIUM SUBVIEWS ==========
+function TurvaOpen() {
+  const [sosActive, setSosActive] = useState(false);
+  return (
+    <>
+      {/* Kotiturva — päälimmäisenä */}
+      <div style={{ background:"linear-gradient(135deg, #1A1A2E 0%, #2A2A4E 100%)", borderRadius:10, padding:10, marginBottom:6, color:WHITE }}>
+        <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:6 }}>
+          <div style={{ display:"flex", alignItems:"center", gap:4 }}>
+            <span style={{ fontSize:10 }}>🏠</span>
+            <span style={{ fontSize:9, fontWeight:700 }}>Elisa Kotiturva</span>
+          </div>
+          <div style={{ display:"flex", alignItems:"center", gap:3 }}>
+            <div style={{ width:5, height:5, borderRadius:"50%", background:GREEN }} />
+            <span style={{ fontSize:6, color:"#4ADE80", fontWeight:600 }}>Vartiointi päällä</span>
+          </div>
+        </div>
+        <div style={{ display:"flex", gap:4, marginBottom:6 }}>
+          {[{i:"🔒",l:"Murto",s:"OK"},{i:"🔥",l:"Palo",s:"OK"},{i:"💧",l:"Vesi",s:"OK"}].map((s,i) => (
+            <div key={i} style={{ flex:1, background:"rgba(255,255,255,0.08)", borderRadius:6, padding:"5px 0", textAlign:"center" }}>
+              <div style={{ fontSize:12 }}>{s.i}</div>
+              <div style={{ fontSize:6, opacity:0.7, marginTop:1 }}>{s.l}</div>
+              <div style={{ fontSize:7, fontWeight:700, color:"#4ADE80", marginTop:1 }}>{s.s}</div>
+            </div>
+          ))}
+        </div>
+        <div style={{ display:"flex", gap:4 }}>
+          <div style={{ flex:1, background:"rgba(255,255,255,0.1)", borderRadius:6, padding:"6px 8px", display:"flex", alignItems:"center", gap:5, cursor:"pointer" }}>
+            <span style={{ fontSize:11 }}>📹</span>
+            <div>
+              <div style={{ fontSize:7, fontWeight:600 }}>Kamerat</div>
+              <div style={{ fontSize:6, opacity:0.7 }}>2 kameraa · Live</div>
+            </div>
+          </div>
+          <div style={{ flex:1, background:"rgba(255,255,255,0.1)", borderRadius:6, padding:"6px 8px", display:"flex", alignItems:"center", gap:5, cursor:"pointer" }}>
+            <span style={{ fontSize:11 }}>📞</span>
+            <div>
+              <div style={{ fontSize:7, fontWeight:600 }}>Hälytyskeskus</div>
+              <div style={{ fontSize:6, opacity:0.7 }}>24/7 valvonta</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Kotiturva-tapahtumat */}
+      <div style={{ fontSize:7, color:GRAY, fontWeight:600, marginBottom:4, textTransform:"uppercase", letterSpacing:0.5 }}>Kotiturva-tapahtumat</div>
+      {[
+        { icon:"📹", text:"Liikettä: Etupiha", time:"12:34", c:ELISA_ACCENT },
+        { icon:"🔓", text:"Hälytys pois — Äiti kotona", time:"11:20", c:GREEN },
+        { icon:"🔒", text:"Hälytys päälle — kaikki lähteneet", time:"7:45", c:ELISA_BLUE },
+      ].map((a,i) => (
+        <div key={i} style={{ background:WHITE, borderRadius:7, padding:"6px 8px", marginBottom:3, border:`1px solid ${LIGHT_GRAY}`, display:"flex", alignItems:"center", gap:6, borderLeft:`3px solid ${a.c}` }}>
+          <span style={{ fontSize:11 }}>{a.icon}</span>
+          <div style={{ flex:1, fontSize:8, fontWeight:500, color:DARK }}>{a.text}</div>
+          <div style={{ fontSize:7, color:GRAY }}>{a.time}</div>
+        </div>
+      ))}
+
+      {/* SOS */}
+      <div onClick={() => { setSosActive(true); setTimeout(() => setSosActive(false), 2000); }} style={{
+        background:sosActive?"#DC2626":"linear-gradient(135deg, #EF4444 0%, #DC2626 100%)",
+        borderRadius:10, padding:"8px 11px", marginTop:6, marginBottom:6, display:"flex", alignItems:"center", gap:8, cursor:"pointer",
+        boxShadow:"0 3px 10px rgba(239,68,68,0.3)", transition:"all 0.2s ease"
+      }}>
+        <div style={{ width:24, height:24, borderRadius:"50%", background:"rgba(255,255,255,0.2)", display:"flex", alignItems:"center", justifyContent:"center", fontSize:12, border:"1.5px solid rgba(255,255,255,0.4)" }}>🆘</div>
+        <div style={{ flex:1 }}>
+          <div style={{ fontSize:9, fontWeight:700, color:WHITE }}>{sosActive?"Hälytys lähetetty!":"SOS-hälytys"}</div>
+          <div style={{ fontSize:6, color:"rgba(255,255,255,0.8)" }}>{sosActive?"Sijainti jaettu kaikille":"Lähetä sijainti perheelle"}</div>
+        </div>
+      </div>
+
+      {/* Perheturva-tapahtumat */}
+      <div style={{ fontSize:7, color:GRAY, fontWeight:600, marginBottom:4, textTransform:"uppercase", letterSpacing:0.5 }}>Perheturva</div>
+      {[
+        { icon:"✅", text:"Veera saapui koululle", time:"8:02", c:GREEN },
+        { icon:"🤖", text:"Helmi: Eemeli myöhässä", time:"7:55", c:ORANGE },
+        { icon:"🐕", text:"Bella poistui vyöhykkeeltä", time:"7:30", c:ORANGE },
+      ].map((a,i) => (
+        <div key={i} style={{ background:WHITE, borderRadius:7, padding:"6px 8px", marginBottom:3, border:`1px solid ${LIGHT_GRAY}`, display:"flex", alignItems:"center", gap:6, borderLeft:`3px solid ${a.c}` }}>
+          <span style={{ fontSize:11 }}>{a.icon}</span>
+          <div style={{ flex:1, fontSize:8, fontWeight:500, color:DARK }}>{a.text}</div>
+          <div style={{ fontSize:7, color:GRAY }}>{a.time}</div>
+        </div>
+      ))}
+
+      {/* Geoaidat */}
+      <div style={{ fontSize:7, color:GRAY, fontWeight:600, margin:"6px 0 4px", textTransform:"uppercase", letterSpacing:0.5 }}>Geoaidat</div>
+      {[{n:"Koti",i:"🏠",s:"Isä — ei seurannassa (DNA)"},{n:"Koulu",i:"🏫",s:"Veera paikalla"},{n:"Päiväkoti",i:"🧒",s:"Eemeli paikalla"}].map((z,i) => (
+        <div key={i} style={{ display:"flex", alignItems:"center", gap:6, background:WHITE, borderRadius:7, padding:"5px 8px", marginBottom:2, border:`1px solid ${LIGHT_GRAY}` }}>
+          <div style={{ width:22, height:22, borderRadius:6, background:ELISA_LIGHT, display:"flex", alignItems:"center", justifyContent:"center", fontSize:11 }}>{z.i}</div>
+          <div style={{ flex:1 }}>
+            <div style={{ fontSize:9, fontWeight:500, color:DARK }}>{z.n}</div>
+            <div style={{ fontSize:7, color:i===0?"#B91C1C":GRAY }}>{z.s}</div>
+          </div>
+          <div style={{ width:6, height:6, borderRadius:"50%", background:i===0?ORANGE:GREEN }} />
+        </div>
+      ))}
+    </>
+  );
+}
+
+function TurvaLocked() {
+  return (
+    <div style={{ position:"relative", minHeight:160 }}>
+      <div style={{ opacity:0.4, pointerEvents:"none" }}>
+        {[{icon:"✅",text:"Veera saapui koululle"},{icon:"🤖",text:"Helmi: Eemeli myöhässä"},{icon:"🐕",text:"Bella poistui vyöhykkeeltä"}].map((a,i) => (
+          <div key={i} style={{ background:WHITE, borderRadius:7, padding:"6px 8px", marginBottom:3, border:`1px solid ${LIGHT_GRAY}`, display:"flex", alignItems:"center", gap:6 }}>
+            <span style={{ fontSize:12 }}>{a.icon}</span><div style={{ fontSize:8, color:GRAY }}>{a.text}</div>
+          </div>
+        ))}
+      </div>
+      <div style={{ position:"absolute", inset:0, display:"flex", alignItems:"center", justifyContent:"center" }}>
+        <div style={{ background:WHITE, borderRadius:12, padding:"14px 16px", textAlign:"center", boxShadow:"0 4px 20px rgba(0,0,0,0.1)", maxWidth:180 }}>
+          <div style={{ fontSize:20, marginBottom:4 }}>🛡️</div>
+          <div style={{ fontSize:10, fontWeight:600, color:DARK, marginBottom:2 }}>Kotiturva ja perheturva</div>
+          <div style={{ fontSize:8, color:GRAY, marginBottom:8, lineHeight:1.4 }}>Hälytysjärjestelmä, kamerat, geoaidat, AI ja SOS</div>
+          <div style={{ background:PREMIUM_GOLD, color:WHITE, fontSize:9, fontWeight:700, padding:"7px 14px", borderRadius:8, cursor:"pointer" }}>Tilaa Premium →</div>
+          <div style={{ fontSize:7, color:GRAY, marginTop:4 }}>Sisältyy Premium-liittymiin</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function EnergiaOpen() {
+  return (
+    <>
+      <div style={{ background:"linear-gradient(135deg, #0A4D2E 0%, #166534 100%)", borderRadius:10, padding:10, marginBottom:6, color:WHITE }}>
+        <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:6 }}>
+          <div style={{ fontSize:9, fontWeight:600 }}>⚡ Elisa Kotiakku</div>
+          <div style={{ fontSize:6, background:"rgba(255,255,255,0.2)", padding:"1px 6px", borderRadius:6 }}>Yhdistetty</div>
+        </div>
+        <div style={{ display:"flex", alignItems:"center", gap:8 }}>
+          <div style={{ width:36, height:50, borderRadius:6, border:"1.5px solid rgba(255,255,255,0.4)", position:"relative", overflow:"hidden" }}>
+            <div style={{ position:"absolute", bottom:0, left:0, right:0, height:"78%", background:"linear-gradient(180deg, #4ADE80, #22C55E)", borderRadius:"0 0 4px 4px" }} />
+            <div style={{ position:"absolute", inset:0, display:"flex", alignItems:"center", justifyContent:"center", fontSize:10, fontWeight:700, textShadow:"0 1px 2px rgba(0,0,0,0.3)" }}>78%</div>
+          </div>
+          <div>
+            <div style={{ fontSize:14, fontWeight:700 }}>11,7 kWh</div>
+            <div style={{ fontSize:7, opacity:0.8 }}>Seuraava halpa tunti: klo 02</div>
+          </div>
+        </div>
+      </div>
+      <div style={{ background:WHITE, borderRadius:8, padding:8, marginBottom:5, border:`1px solid ${LIGHT_GRAY}` }}>
+        <div style={{ fontSize:8, fontWeight:600, color:DARK, marginBottom:4 }}>Pörssisähkö nyt</div>
+        <div style={{ display:"flex", alignItems:"baseline", gap:3 }}>
+          <span style={{ fontSize:18, fontWeight:700, color:GREEN }}>3,42</span>
+          <span style={{ fontSize:7, color:GRAY }}>snt/kWh</span>
+          <span style={{ fontSize:7, color:GREEN, marginLeft:"auto", fontWeight:600 }}>Halpa</span>
+        </div>
+        <div style={{ display:"flex", gap:1, marginTop:5, height:24 }}>
+          {[8,5,3,2,3,12,18,15,8,5,3,4,6,9,14,22,28,25,18,12,8,5,3,2].map((v,i) => (
+            <div key={i} style={{ flex:1, height:`${(v/28)*22}px`, background:v>15?"#FCA5A5":v>8?"#FDE68A":"#BBF7D0", borderRadius:1, alignSelf:"flex-end" }} />
+          ))}
+        </div>
+      </div>
+      <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:4 }}>
+        <div style={{ background:"#ECFDF5", borderRadius:8, padding:"6px 8px" }}>
+          <div style={{ fontSize:12, fontWeight:700, color:"#166534" }}>47,20 €</div>
+          <div style={{ fontSize:7, color:"#166534" }}>Säästö tässä kk</div>
+        </div>
+        <div style={{ background:ELISA_LIGHT, borderRadius:8, padding:"6px 8px" }}>
+          <div style={{ fontSize:12, fontWeight:700, color:ELISA_BLUE }}>312 €</div>
+          <div style={{ fontSize:7, color:ELISA_BLUE }}>Yhteensä</div>
+        </div>
+      </div>
+    </>
+  );
+}
+
+function EnergiaLocked() {
+  return (
+    <div style={{ position:"relative", minHeight:160 }}>
+      <div style={{ opacity:0.3 }}>
+        <div style={{ background:"#E5E7EB", borderRadius:10, padding:10, marginBottom:6, height:60 }} />
+        <div style={{ background:"#F3F4F6", borderRadius:8, padding:8, marginBottom:5, height:50 }} />
+      </div>
+      <div style={{ position:"absolute", inset:0, display:"flex", alignItems:"center", justifyContent:"center" }}>
+        <div style={{ background:WHITE, borderRadius:12, padding:"14px 16px", textAlign:"center", boxShadow:"0 4px 20px rgba(0,0,0,0.1)", maxWidth:180 }}>
+          <div style={{ fontSize:20, marginBottom:4 }}>⚡</div>
+          <div style={{ fontSize:10, fontWeight:600, color:DARK, marginBottom:2 }}>Hallitse energiaa</div>
+          <div style={{ fontSize:8, color:GRAY, marginBottom:8, lineHeight:1.4 }}>Kotiakku, spot-hinnat, säästöt</div>
+          <div style={{ background:PREMIUM_GOLD, color:WHITE, fontSize:9, fontWeight:700, padding:"7px 14px", borderRadius:8, cursor:"pointer" }}>Tilaa Premium →</div>
+          <div style={{ fontSize:7, color:GRAY, marginTop:4 }}>Sisältyy Premium-liittymiin</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function WiFiOpen() {
+  return (
+    <>
+      <div style={{ background:`linear-gradient(135deg, ${ELISA_BLUE} 0%, #1A3AD0 100%)`, borderRadius:10, padding:10, marginBottom:6, color:WHITE }}>
+        <div style={{ fontSize:9, fontWeight:600, marginBottom:5 }}>📶 Kodin verkko</div>
+        <div style={{ display:"flex", gap:10 }}>
+          <div><div style={{ fontSize:14, fontWeight:700 }}>345</div><div style={{ fontSize:7, opacity:0.8 }}>Mbps</div></div>
+          <div><div style={{ fontSize:14, fontWeight:700 }}>12</div><div style={{ fontSize:7, opacity:0.8 }}>Laitetta</div></div>
+          <div><div style={{ fontSize:14, fontWeight:700, color:"#4ADE80" }}>OK</div><div style={{ fontSize:7, opacity:0.8 }}>Turva</div></div>
+        </div>
+      </div>
+      <div style={{ background:"#FEF2F2", borderRadius:7, padding:"5px 8px", marginBottom:5, border:"1px solid #FECACA", display:"flex", alignItems:"center", gap:5 }}>
+        <span style={{ fontSize:11 }}>⚠️</span>
+        <div style={{ flex:1 }}>
+          <div style={{ fontSize:8, fontWeight:600, color:"#991B1B" }}>Tuntematon laite verkossa</div>
+          <div style={{ fontSize:7, color:"#B91C1C" }}>14 min sitten</div>
+        </div>
+        <div style={{ fontSize:7, color:"#EF4444", fontWeight:600 }}>Estä</div>
+      </div>
+      <div style={{ background:WHITE, borderRadius:7, padding:"5px 8px", marginBottom:5, border:`1px solid ${LIGHT_GRAY}`, display:"flex", alignItems:"center", gap:5 }}>
+        <div style={{ width:22, height:22, borderRadius:6, background:ELISA_LIGHT, display:"flex", alignItems:"center", justifyContent:"center", fontSize:8, fontWeight:700, color:ELISA_BLUE }}>QR</div>
+        <div style={{ flex:1 }}>
+          <div style={{ fontSize:8, fontWeight:600, color:DARK }}>Vierasverkko</div>
+          <div style={{ fontSize:7, color:GRAY }}>QR-koodi vieraille</div>
+        </div>
+        <div style={{ fontSize:7, color:GREEN, fontWeight:600 }}>Päällä</div>
+      </div>
+      <div style={{ fontSize:7, color:GRAY, fontWeight:600, marginBottom:4, textTransform:"uppercase", letterSpacing:0.5 }}>Laitteet</div>
+      {[
+        { n:"iPhone (Äiti)", i:"📱", s:"48 Mbps" },
+        { n:"MacBook Pro", i:"💻", s:"210 Mbps" },
+        { n:"PlayStation 5", i:"🎮", s:"95 Mbps" },
+        { n:"Tuntematon", i:"❓", s:"—", alert:true },
+      ].map((d,i) => (
+        <div key={i} style={{ display:"flex", alignItems:"center", gap:5, background:d.alert?"#FEF2F2":WHITE, borderRadius:6, padding:"4px 7px", marginBottom:2, border:d.alert?"1px solid #FECACA":`1px solid ${LIGHT_GRAY}` }}>
+          <span style={{ fontSize:11 }}>{d.i}</span>
+          <div style={{ flex:1, fontSize:8, fontWeight:500, color:d.alert?"#EF4444":DARK }}>{d.n}</div>
+          <div style={{ fontSize:7, color:GRAY }}>{d.s}</div>
+        </div>
+      ))}
+    </>
+  );
+}
+
+function WiFiLocked() {
+  return (
+    <div style={{ position:"relative", minHeight:160 }}>
+      <div style={{ opacity:0.3 }}>
+        <div style={{ background:"#E5E7EB", borderRadius:10, padding:10, marginBottom:6, height:55 }} />
+        <div style={{ background:"#F3F4F6", borderRadius:7, padding:8, marginBottom:4, height:28 }} />
+        <div style={{ background:"#F3F4F6", borderRadius:7, padding:8, marginBottom:4, height:28 }} />
+      </div>
+      <div style={{ position:"absolute", inset:0, display:"flex", alignItems:"center", justifyContent:"center" }}>
+        <div style={{ background:WHITE, borderRadius:12, padding:"14px 16px", textAlign:"center", boxShadow:"0 4px 20px rgba(0,0,0,0.1)", maxWidth:180 }}>
+          <div style={{ fontSize:20, marginBottom:4 }}>📶</div>
+          <div style={{ fontSize:10, fontWeight:600, color:DARK, marginBottom:2 }}>Hallitse kodin verkkoa</div>
+          <div style={{ fontSize:8, color:GRAY, marginBottom:8, lineHeight:1.4 }}>Laitteet, tietoturva, vierasverkko</div>
+          <div style={{ background:PREMIUM_GOLD, color:WHITE, fontSize:9, fontWeight:700, padding:"7px 14px", borderRadius:8, cursor:"pointer" }}>Tilaa Premium →</div>
+          <div style={{ fontSize:7, color:GRAY, marginTop:4 }}>Sisältyy Premium-liittymiin</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function RaporttiOpen() {
+  const days = ["Ma","Ti","Ke","To","Pe","La","Su"];
+  const data = [65,72,58,80,45,90,75];
+  const max = Math.max(...data);
+  return (
+    <>
+      <div style={{ background:`linear-gradient(135deg, ${ELISA_BLUE} 0%, ${PREMIUM_GOLD} 100%)`, borderRadius:10, padding:9, marginBottom:4, color:WHITE }}>
+        <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:5 }}>
+          <div><div style={{ fontSize:7, opacity:0.8 }}>Viikkoraportti</div><div style={{ fontSize:11, fontWeight:700 }}>Viikko 13 · 2026</div></div>
+          <div style={{ fontSize:6, background:"rgba(255,255,255,0.2)", padding:"1px 6px", borderRadius:6 }}>✦ Helmi</div>
+        </div>
+        <div style={{ display:"flex", gap:4 }}>
+          <div style={{ flex:1, background:"rgba(255,255,255,0.12)", borderRadius:6, padding:"5px 7px", textAlign:"center" }}>
+            <div style={{ fontSize:11, fontWeight:700 }}>🔒 0</div>
+            <div style={{ fontSize:6, opacity:0.8 }}>Hälytystä</div>
+          </div>
+          <div style={{ flex:1, background:"rgba(255,255,255,0.12)", borderRadius:6, padding:"5px 7px", textAlign:"center" }}>
+            <div style={{ fontSize:11, fontWeight:700 }}>⚡ 12,40 €</div>
+            <div style={{ fontSize:6, opacity:0.8 }}>Kotiakku säästi</div>
+          </div>
+        </div>
+      </div>
+      <div style={{ fontSize:8, color:DARK, lineHeight:1.4, padding:"2px 2px 6px", background:WHITE, borderRadius:7, marginBottom:6, border:`1px solid ${LIGHT_GRAY}` }}>
+        <div style={{ padding:"5px 7px", fontSize:8, color:GRAY }}>Normaali viikko. Kotiturva: ei poikkeamia. Veera ajoissa joka päivä. Bella +12 % aktiivisempi.</div>
+      </div>
+
+      {/* Kotiturva */}
+      <div style={{ fontSize:7, color:GRAY, fontWeight:600, marginBottom:4, textTransform:"uppercase", letterSpacing:0.5 }}>🔒 Kotiturva</div>
+      <div style={{ background:WHITE, borderRadius:8, padding:8, marginBottom:6, border:`1px solid ${LIGHT_GRAY}` }}>
+        <div style={{ display:"flex", gap:6, marginBottom:4 }}>
+          <div style={{ flex:1, textAlign:"center" }}>
+            <div style={{ fontSize:14, fontWeight:700, color:GREEN }}>0</div>
+            <div style={{ fontSize:6, color:GRAY }}>Hälytystä</div>
+          </div>
+          <div style={{ flex:1, textAlign:"center" }}>
+            <div style={{ fontSize:14, fontWeight:700, color:DARK }}>23</div>
+            <div style={{ fontSize:6, color:GRAY }}>Liikehavaintoa</div>
+          </div>
+          <div style={{ flex:1, textAlign:"center" }}>
+            <div style={{ fontSize:14, fontWeight:700, color:DARK }}>14</div>
+            <div style={{ fontSize:6, color:GRAY }}>Ovitapahtumaa</div>
+          </div>
+        </div>
+        <div style={{ fontSize:7, color:GRAY }}>Kaikki normaalia. Ei poikkeavia tapahtumia.</div>
+      </div>
+
+      {/* Energia */}
+      <div style={{ fontSize:7, color:GRAY, fontWeight:600, marginBottom:4, textTransform:"uppercase", letterSpacing:0.5 }}>⚡ Energia</div>
+      <div style={{ background:"#ECFDF5", borderRadius:8, padding:8, marginBottom:6, border:"1px solid #BBF7D0" }}>
+        <div style={{ display:"flex", alignItems:"center", gap:6 }}>
+          <div>
+            <div style={{ fontSize:14, fontWeight:700, color:"#166534" }}>12,40 €</div>
+            <div style={{ fontSize:6, color:"#166534" }}>Kotiakun säästö tällä viikolla</div>
+          </div>
+          <div style={{ marginLeft:"auto", textAlign:"right" }}>
+            <div style={{ fontSize:10, fontWeight:700, color:"#166534" }}>312 €</div>
+            <div style={{ fontSize:6, color:"#166534" }}>Yhteensä</div>
+          </div>
+        </div>
+        <div style={{ display:"flex", gap:1, marginTop:5, height:16 }}>
+          {[4,3,2,5,8,3,2].map((v,i) => (
+            <div key={i} style={{ flex:1, height:`${(v/8)*14}px`, background:"#22C55E", borderRadius:1, alignSelf:"flex-end", opacity:0.5+v/16 }} />
+          ))}
+        </div>
+        <div style={{ display:"flex", gap:3, marginTop:2 }}>{days.map((d,i) => <div key={i} style={{ flex:1, textAlign:"center", fontSize:5, color:"#166534" }}>{d}</div>)}</div>
+      </div>
+
+      {/* Perhe */}
+      <div style={{ fontSize:7, color:GRAY, fontWeight:600, marginBottom:4, textTransform:"uppercase", letterSpacing:0.5 }}>👨‍👩‍👧‍👦 Perhe</div>
+      <div style={{ background:WHITE, borderRadius:8, padding:8, marginBottom:4, border:`1px solid ${LIGHT_GRAY}` }}>
+        <div style={{ fontSize:8, fontWeight:600, color:DARK, marginBottom:6 }}>Aktiivisuus</div>
+        <div style={{ display:"flex", alignItems:"flex-end", gap:3, height:40, marginBottom:2 }}>
+          {data.map((v,i) => <div key={i} style={{ flex:1, height:`${(v/max)*35}px`, background:i===5?`linear-gradient(180deg, ${PREMIUM_GOLD}, ${ELISA_ACCENT})`:ELISA_LIGHT, borderRadius:2 }} />)}
+        </div>
+        <div style={{ display:"flex", gap:3 }}>{days.map((d,i) => <div key={i} style={{ flex:1, textAlign:"center", fontSize:6, color:GRAY }}>{d}</div>)}</div>
+      </div>
+      {[
+        { a:"👧", n:"Veera", s:"Koulumatkat säännölliset", t:"↑", tc:GREEN },
+        { a:"🐕", n:"Bella", s:"Ulkoilut 3,2x/pv, +12 %", t:"↑", tc:GREEN },
+        { a:"👨", n:"Isä", s:"Ei seurannassa — DNA-liittymä", t:"⚠", tc:ORANGE },
+      ].map((m,i) => (
+        <div key={i} style={{ background:WHITE, borderRadius:7, padding:"6px 8px", marginBottom:3, border:`1px solid ${LIGHT_GRAY}` }}>
+          <div style={{ display:"flex", alignItems:"center", gap:4 }}>
+            <div style={{ width:16, height:16, borderRadius:"50%", background:i===2?"#FEE2E2":ELISA_LIGHT, display:"flex", alignItems:"center", justifyContent:"center", fontSize:8 }}>{m.a}</div>
+            <div style={{ fontSize:8, fontWeight:600, color:DARK, flex:1 }}>{m.n}</div>
+            <div style={{ fontSize:7, color:m.tc, fontWeight:600 }}>{m.t}</div>
+          </div>
+          <div style={{ fontSize:7, color:i===2?"#B91C1C":GRAY, marginTop:2, paddingLeft:20 }}>{m.s}</div>
+        </div>
+      ))}
+    </>
+  );
+}
+
+function RaporttiLocked() {
+  return (
+    <div style={{ position:"relative", minHeight:160 }}>
+      <div style={{ opacity:0.3 }}>
+        <div style={{ background:"#E5E7EB", borderRadius:10, padding:10, marginBottom:6, height:55 }} />
+        <div style={{ background:"#F3F4F6", borderRadius:8, padding:8, marginBottom:5, height:50 }} />
+      </div>
+      <div style={{ position:"absolute", inset:0, display:"flex", alignItems:"center", justifyContent:"center" }}>
+        <div style={{ background:WHITE, borderRadius:12, padding:"14px 16px", textAlign:"center", boxShadow:"0 4px 20px rgba(0,0,0,0.1)", maxWidth:180 }}>
+          <div style={{ fontSize:20, marginBottom:4 }}>📊</div>
+          <div style={{ fontSize:10, fontWeight:600, color:DARK, marginBottom:2 }}>AI-viikkoraportti</div>
+          <div style={{ fontSize:8, color:GRAY, marginBottom:8, lineHeight:1.4 }}>Perheen trendit ja havainnot</div>
+          <div style={{ background:PREMIUM_GOLD, color:WHITE, fontSize:9, fontWeight:700, padding:"7px 14px", borderRadius:8, cursor:"pointer" }}>Tilaa Premium →</div>
+          <div style={{ fontSize:7, color:GRAY, marginTop:4 }}>Sisältyy Premium-liittymiin</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ========== PHONE FRAME ==========
+function PhoneFrame({ children, label, sublabel, badgeColor, tab, setTab, tabs, isPremium }) {
+  return (
+    <div style={{ display:"flex", flexDirection:"column", alignItems:"center", gap:6 }}>
+      <div style={{ textAlign:"center" }}>
+        <div style={{ fontSize:10, fontWeight:700, color:badgeColor }}>{label}</div>
+        {sublabel && <div style={{ fontSize:8, color:GRAY }}>{sublabel}</div>}
+      </div>
+      <div style={{
+        width:260, height:540, background:"#1A1A1A", borderRadius:32, padding:6,
+        boxShadow:"0 15px 50px rgba(0,0,0,0.2), 0 3px 12px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.1)"
+      }}>
+        <div style={{ width:"100%", height:"100%", background:BG, borderRadius:26, overflow:"hidden", display:"flex", flexDirection:"column" }}>
+          <div style={{ height:28, display:"flex", alignItems:"center", justifyContent:"space-between", padding:"0 16px", background:isPremium?DARK:WHITE, flexShrink:0 }}>
+            <span style={{ fontSize:9, fontWeight:600, color:isPremium?WHITE:DARK }}>9:41</span>
+          </div>
+          <div style={{ padding:"4px 10px 6px", background:isPremium?DARK:WHITE, borderBottom:isPremium?"none":`1px solid ${LIGHT_GRAY}`, flexShrink:0 }}>
+            <div style={{ display:"flex", alignItems:"center", gap:5 }}>
+              <span style={{ fontSize:14, fontWeight:700, color:isPremium?WHITE:ELISA_BLUE, letterSpacing:-0.5 }}>Elisa Koti</span>
+              {isPremium && <span style={{ fontSize:6, fontWeight:700, color:WHITE, background:PREMIUM_GOLD, padding:"1px 5px", borderRadius:6 }}>✦ PREMIUM</span>}
+            </div>
+          </div>
+          <div style={{ flex:1, overflowY:"auto", overflowX:"hidden" }}>{children}</div>
+          <div style={{ height:48, background:WHITE, borderTop:`1px solid ${LIGHT_GRAY}`, display:"flex", alignItems:"center", padding:"0 2px", flexShrink:0 }}>
+            {tabs.map((t,i) => (
+              <div key={i} onClick={() => setTab(i)} style={{
+                flex:1, display:"flex", flexDirection:"column", alignItems:"center", gap:1, cursor:"pointer", padding:"3px 0", position:"relative"
+              }}>
+                <div style={{
+                  width:22, height:22, borderRadius:6,
+                  background: tab===i ? (t.premium?PREMIUM_GOLD:ELISA_BLUE) : "transparent",
+                  display:"flex", alignItems:"center", justifyContent:"center", fontSize:tab===i?10:13
+                }}>
+                  {tab===i ? <span style={{ color:WHITE, fontSize:10 }}>{t.icon}</span> : <span style={{ opacity:t.premium?0.5:0.8 }}>{t.icon}</span>}
+                </div>
+                <span style={{ fontSize:6, fontWeight:tab===i?700:400, color:tab===i?(t.premium?PREMIUM_GOLD:ELISA_BLUE):GRAY }}>{t.label}</span>
+                {t.premium && tab!==i && <div style={{ position:"absolute", top:0, right:"15%", width:4, height:4, borderRadius:"50%", background:PREMIUM_GOLD }} />}
+              </div>
+            ))}
+          </div>
+          <div style={{ height:12, display:"flex", alignItems:"center", justifyContent:"center", background:WHITE, flexShrink:0 }}>
+            <div style={{ width:60, height:3, borderRadius:2, background:LIGHT_GRAY }} />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ========== MAIN APP ==========
+function ElisaKotiMockup() {
+  const [freeTab, setFreeTab] = useState(0);
+  const [premTab, setPremTab] = useState(0);
+
+  const mainTabs = [
+    { label:"Seinä", icon:"📋" },
+    { label:"Sijainti", icon:"📍" },
+    { label:"Premium", icon:"✦", premium:true },
+    { label:"Palvelut", icon:"🛒" },
+  ];
+
+  return (
+    <div style={{
+      minHeight:"100vh", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center",
+      background:"linear-gradient(135deg, #F0F2F8 0%, #E4E8F4 100%)",
+      fontFamily:"'SF Pro Display', 'Segoe UI', system-ui, -apple-system, sans-serif",
+      padding:"20px 12px", gap:14
+    }}>
+      <div style={{ textAlign:"center" }}>
+        <div style={{ fontSize:22, fontWeight:700, color:ELISA_BLUE, letterSpacing:-0.5 }}>Elisa Koti</div>
+        <div style={{ fontSize:11, color:GRAY, marginTop:2 }}>Free vs. Premium</div>
+      </div>
+      <div style={{ display:"flex", gap:20, flexWrap:"wrap", justifyContent:"center" }}>
+        <PhoneFrame label="FREE" sublabel="Elisan asiakas" badgeColor={ELISA_BLUE} tab={freeTab} setTab={setFreeTab} tabs={mainTabs}>
+          {freeTab === 0 && <Seina isPremium={false} />}
+          {freeTab === 1 && <Sijainti isPremium={false} />}
+          {freeTab === 2 && <PremiumTab isPremium={false} />}
+          {freeTab === 3 && <Palvelut />}
+        </PhoneFrame>
+        <PhoneFrame label="PREMIUM" sublabel="Premium-liittymä" badgeColor={PREMIUM_GOLD} tab={premTab} setTab={setPremTab} tabs={mainTabs} isPremium>
+          {premTab === 0 && <Seina isPremium={true} />}
+          {premTab === 1 && <Sijainti isPremium={true} />}
+          {premTab === 2 && <PremiumTab isPremium={true} />}
+          {premTab === 3 && <Palvelut />}
+        </PhoneFrame>
+      </div>
+      <div style={{ fontSize:8, color:GRAY, textAlign:"center" }}>Klikkaa välilehtiä ja alavalikkoita · Konseptimockup 2026</div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<ElisaKotiMockup />);
+</script>
+</body>
+</html>
